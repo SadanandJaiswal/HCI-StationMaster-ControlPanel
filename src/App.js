@@ -22,8 +22,8 @@ const App = () => {
     {
       b1: 19,
       b2: 2,
-      trackToSet: [0,1,2,3,4,9,10],
-      ledsToOff: [4,9,10],
+      trackToSet: [6,7,8,9,10,4,0,1,2,3],
+      ledsToOff: [6,7,8,4,9,10],
       crossToCheck: [4,5],
       signalChange: [0,2],
       signalToOff: [2]
@@ -125,10 +125,10 @@ const App = () => {
       crossToCheck: [],
       checkAlreadyTrack: [33],
       
-      ledsToOff: [21,22,23, 24,25,33, 35,36,37,38],
+      ledsToOff: [38, 37, 36, 35, 33, 25, 24, 23, 22, 21],
       signalChange: [5,6,10,11],
 
-      ledsToOff2: [21,22,23, 24,25,26,27,28,29],
+      ledsToOff2: [29, 28, 27, 26, 25, 24, 23, 22, 21],
       signalChange2: [5,6,7],
     },
   ];
@@ -184,24 +184,47 @@ const App = () => {
     });
   };
 
-  const handleTrainGoing = (ledsArray)=>{
-    // alert("inside")
-    console.log(ledsArray)
-    const elements = document.getElementsByClassName(`ledSection`);
-    ledsArray.forEach((value, index) => {
-      console.log(value);
-      const ledSectionLed = elements[value].getElementsByClassName('led');
+  const handleTrainGoing = (ledsArray, signalsArray) => {
+  const elements = document.getElementsByClassName(`ledSection`);
+  let totalTimeouts = 0;
 
+  ledsArray.forEach((value, index) => {
+    const ledSectionLed = elements[value].getElementsByClassName('led');
+
+    setTimeout(() => {
       for (let i = 0; i < ledSectionLed.length; i++) {
-        setTimeout(() => {
-          ledSectionLed[i].classList.add("border50");
-        }, (index * ledSectionLed.length + i) * 500); // Calculate dynamic timeout
-        setTimeout(() => {
-          ledSectionLed[i].classList.remove("border50");
-        }, (index * ledSectionLed.length + i) * 1000);
+        ledSectionLed[i].classList.add("border50");
+        ledSectionLed[i].classList.add("trainGoing");
       }
-    })
-  };
+      setTimeout(() => {
+        for (let i = 0; i < ledSectionLed.length; i++) {
+          ledSectionLed[i].classList.remove("border50");
+          ledSectionLed[i].classList.remove("trainGoing");
+        }
+      }, (index+1*1000));
+
+    }, ((index+1)*500));
+
+    setTimeout(() => {
+      changeLed(ledsArray,0);
+      chnageSignal(signalsArray, 0);
+    }, (ledsArray.length*500 + 1000));
+
+
+
+
+
+    // for (let i = 0; i < ledSectionLed.length; i++) {
+    //   setTimeout(() => {
+    //     ledSectionLed[i].classList.add("trainGoing");
+    //   }, (index * ledSectionLed.length + i) * 500); // Calculate dynamic timeout
+    //   setTimeout(() => {
+    //     ledSectionLed[i].classList.remove("trainGoing");
+    //   }, (index * ledSectionLed.length + i) * 700);
+    // }
+  });
+};
+
 
   const changeTrackCrossStatus = () => {
     const [b1, b2] = btnStack;
@@ -214,17 +237,17 @@ const App = () => {
             changeLed(trackData.trackToSet,2);
             if(trackData.greenSignal === true){
               if(checkTrackStatus(trackData.checkAlreadyTrack)===false){
-                chnageSignal(trackData.signalChange, 2);
+                chnageSignal(trackData.signalChange, 1);
                 // Train Leaving 
-                handleTrainGoing(trackData.ledsToOff);
+                handleTrainGoing(trackData.ledsToOff, trackData.signalChange);
                 // setTimeout(() => {
                   // changeLed(trackData.ledsToOff,0);
                   // chnageSignal(trackData.signalChange, 0);
                 // }, 5000);
               }else{
-                chnageSignal(trackData.signalChange2, 2);
+                chnageSignal(trackData.signalChange2, 1);
                 // Train Leaving 
-                handleTrainGoing(trackData.ledsToOff2);
+                handleTrainGoing(trackData.ledsToOff2, trackData.signalChange2);
                 // setTimeout(() => {
                 //   changeLed(trackData.ledsToOff2,0);
                 //   chnageSignal(trackData.signalChange2, 0);
@@ -249,6 +272,8 @@ const App = () => {
           if(checkTrackStatus(trackData.crossToCheck)){
             changeLed(trackData.trackToSet,1);
             chnageSignal(trackData.signalChange, 1);
+            // Train Comming
+            // handleTrainGoing(trackData.trackToSet, trackData.signalChange);
             setTimeout(() => {
               changeLed(trackData.ledsToOff,0);
               chnageSignal(trackData.signalToOff, 0);
