@@ -18,6 +18,8 @@ const App = () => {
   const initialSignalState = Array(12).fill(0);
   const [signals, setSignals] = useState(initialSignalState);
 
+  const [cancelBtn, setCancelBtn] = useState(false);
+
   const data = [
     {
       b1: 19,
@@ -131,7 +133,73 @@ const App = () => {
       ledsToOff2: [29, 28, 27, 26, 25, 24, 23, 22, 21],
       signalChange2: [5,6,7],
     },
+    {
+      b1: 100,
+      b2: 91,
+      trackToSetArray: [6,7,8,9,10]
+    },
+    {
+      b1: 100,
+      b2: 92,
+      trackToSetArray: [21,22,23,24,25]
+    },
+    {
+      b1: 100,
+      b2: 93,
+      trackToSetArray: [0,1,2,3]
+    },
+    {
+      b1: 100,
+      b2: 94,
+      trackToSetArray: [11,12,13,14,15]
+    },
+    {
+      b1: 100,
+      b2: 95,
+      trackToSetArray: [26,27,28,29]
+    },
+    {
+      b1: 100,
+      b2: 96,
+      trackToSetArray: [35,36,37,38]
+    },
+    {
+      b1: 100,
+      b2: 97,
+      trackToSetArray: [16,17,18]
+    },
+    {
+      b1: 100,
+      b2: 98,
+      trackToSetArray: [30,31,32]
+    },
   ];
+
+  const handleCancelBtn = ()=>{
+    setCancelBtn(!cancelBtn);
+    handleButtonClick(100);
+  }
+
+  const trackConditionChange = ()=>{
+    const [b1, b2] = btnStack;
+    const trackData = data.find((entry) => (entry.b1 === b1 && entry.b2 === b2) || (entry.b1 === b2 && entry.b2 === b1));
+
+    if(trackData){
+      setLeds(leds =>{
+        const updatedLeds = [...leds];
+        trackData.trackToSetArray.forEach(index => {
+          if(checkTrackStatus(trackData.trackToSetArray)===true){
+            updatedLeds[index] = -1;
+          }else{
+            updatedLeds[index] = 0;
+          }
+        });
+        return updatedLeds;
+      })
+    }else{
+      setScreenMsg("No Command for such combination of buttons");
+    } 
+  }
 
   const playBeep = () => {
     if (beepAudio) {
@@ -188,6 +256,8 @@ const App = () => {
   const elements = document.getElementsByClassName(`ledSection`);
   let totalTimeouts = 0;
 
+  chnageSignal(signalsArray, 2);
+
   ledsArray.forEach((value, index) => {
     const ledSectionLed = elements[value].getElementsByClassName('led');
 
@@ -224,7 +294,6 @@ const App = () => {
     // }
   });
 };
-
 
   const changeTrackCrossStatus = () => {
     const [b1, b2] = btnStack;
@@ -290,11 +359,22 @@ const App = () => {
     }
   }
 
-
+  useEffect(()=>{
+    if(cancelBtn===true){
+      setScreenMsg("Cancel Button Started");
+    }else{
+      setScreenMsg("Cancel Button Stopped");
+    }
+  },[cancelBtn])
 
   useEffect(()=>{
     if (btnStack.length === 2) {
-      changeTrackCrossStatus();
+      const [b1, b2] = btnStack;
+      if(b1===100 || b2===100){
+        trackConditionChange();
+      }else{
+        changeTrackCrossStatus();
+      }
       playBeep();
       setBtnStack([]);
     }
@@ -303,6 +383,8 @@ const App = () => {
   useEffect(() => {
     const audio = new Audio(beepSound);
     setBeepAudio(audio);
+    const widthContainer = document.getElementsByClassName("container")[0].offsetWidth;
+    alert(widthContainer);
   }, []);
 
   useEffect(()=>{
@@ -319,10 +401,17 @@ const App = () => {
         for (let i = 0; i < ledSectionLed.length; i++) {
           ledSectionLed[i].classList.add("purple");
         }
-      }else{
+      }
+      else if(value === -1){
+        for (let i = 0; i < ledSectionLed.length; i++) {
+          ledSectionLed[i].classList.add("black");
+        }
+      }
+      else{
         for (let i = 0; i < ledSectionLed.length; i++) {
           ledSectionLed[i].classList.remove("white");
           ledSectionLed[i].classList.remove("purple");
+          ledSectionLed[i].classList.remove("black");
         }
       }
     });
@@ -582,14 +671,21 @@ const App = () => {
 
             <div className="pointBtnContainer">
               <div>
-                <div className="btn blue"></div>
-                <div className="btn blue"></div>
-                <div className="btn blue"></div>
+                <div className="btn blue" onClick={() => handleButtonClick(91)}></div>
+                <div className="btn blue" onClick={() => handleButtonClick(92)}></div>
               </div>
               <div>
-                <div className="btn blue"></div>
-                <div className="btn blue"></div>
-                <div className="btn blue"></div>
+                <div className="btn blue" onClick={() => handleButtonClick(93)}></div>
+                <div className="btn blue" onClick={() => handleButtonClick(94)}></div>
+                <div className="cancelBtnContainer">
+                  <div className="btn black" onClick={handleCancelBtn}></div>
+                </div>
+                <div className="btn blue" onClick={() => handleButtonClick(95)}></div>
+                <div className="btn blue" onClick={() => handleButtonClick(96)}></div>
+              </div>
+              <div>
+                <div className="btn blue" onClick={() => handleButtonClick(97)}></div>
+                <div className="btn blue" onClick={() => handleButtonClick(98)}></div>
               </div>
             </div>
 
