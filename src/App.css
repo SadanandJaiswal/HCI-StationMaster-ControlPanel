@@ -207,8 +207,8 @@
   width: 220px;
   height: 50px;
   /* right: 5px;
-  top: 5px; */
-  /* position: relative; */
+  top: 5px;
+  position: relative; */
   background-color: blue;
   color: white;
   display: flex;
@@ -225,7 +225,8 @@
 }
 
 .pointBtnContainer{
-  /* border: 1px solid; */
+  border: 1px solid;
+  padding: 1rem 0;
   display: inline-flex;
   width: 100%;
   justify-content: center;
@@ -235,7 +236,7 @@
 
 .pointBtnContainer>div{
   width: 40%;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   display: inline-flex;
   align-items: center;
   justify-content: center;

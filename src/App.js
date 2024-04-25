@@ -188,7 +188,7 @@ const App = () => {
       setLeds(leds =>{
         const updatedLeds = [...leds];
         trackData.trackToSetArray.forEach(index => {
-          if(checkTrackStatus(trackData.trackToSetArray)===true){
+          if(checkTrackStatus(trackData.trackToSetArray)===1){
             updatedLeds[index] = -1;
           }else{
             updatedLeds[index] = 0;
@@ -225,11 +225,13 @@ const App = () => {
 
   const checkTrackStatus = (trackToSetArray) => {
     for (const led of trackToSetArray) { // Use a for...of loop for simpler iteration
-        if (leds[led] !== 0) {
-            return false; // Explicitly return false to break out
+        if (leds[led] === -1) {
+            return -1; // false
+        }else if(leds[led] !== 0){
+          return 0; // false
         }
     }
-    return true; // Only reached if no element violates the condition
+    return 1; // true
   };
 
   const changeLed = (ledArray,to) => {
@@ -301,11 +303,11 @@ const App = () => {
     if(trackData){
       if(trackData?.finalSet === true){
         // alert("i'm here")
-        if(checkTrackStatus(trackData.trackAlreadySet) === false){
-          if(checkTrackStatus(trackData.trackToSet)){
+        if(checkTrackStatus(trackData.trackAlreadySet) === 0){
+          if(checkTrackStatus(trackData.trackToSet) === 1){
             changeLed(trackData.trackToSet,2);
             if(trackData.greenSignal === true){
-              if(checkTrackStatus(trackData.checkAlreadyTrack)===false){
+              if(checkTrackStatus(trackData.checkAlreadyTrack)===0){
                 chnageSignal(trackData.signalChange, 1);
                 // Train Leaving 
                 handleTrainGoing(trackData.ledsToOff, trackData.signalChange);
@@ -337,8 +339,8 @@ const App = () => {
       }else{
         // const check = checkTrackStatus(trackData.trackToSet);
         // alert(check);
-        if(checkTrackStatus(trackData.trackToSet)){
-          if(checkTrackStatus(trackData.crossToCheck)){
+        if(checkTrackStatus(trackData.trackToSet) === 1){
+          if(checkTrackStatus(trackData.crossToCheck) === 1){
             changeLed(trackData.trackToSet,1);
             chnageSignal(trackData.signalChange, 1);
             // Train Comming
