@@ -257,3 +257,41 @@
   /* padding: 10rem; */
   padding-left: 7%;
 }
+
+.aqua{
+  background-color: aqua;
+}
+
+.white2{
+  background-color: white;
+}
+
+.cancel{
+  background-color: black;
+  position: relative;
+  /* width: 50px; */
+  /* height: 50px; */
+  /* background-color: #ffffff; */
+  border: 1px solid #000000;
+}
+
+.cancel::after, .cancel::before 
+{
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 2px;
+  /* background-color: red; */
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cancel::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.cancel::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}

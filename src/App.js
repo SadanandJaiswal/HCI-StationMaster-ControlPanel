@@ -383,8 +383,8 @@ const App = () => {
   useEffect(() => {
     const audio = new Audio(beepSound);
     setBeepAudio(audio);
-    const widthContainer = document.getElementsByClassName("container")[0].offsetWidth;
-    alert(widthContainer);
+    // const widthContainer = document.getElementsByClassName("container")[0].offsetWidth;
+    // alert(widthContainer);
   }, []);
 
   useEffect(()=>{
@@ -404,14 +404,14 @@ const App = () => {
       }
       else if(value === -1){
         for (let i = 0; i < ledSectionLed.length; i++) {
-          ledSectionLed[i].classList.add("black");
+          ledSectionLed[i].classList.add("cancel");
         }
       }
       else{
         for (let i = 0; i < ledSectionLed.length; i++) {
           ledSectionLed[i].classList.remove("white");
           ledSectionLed[i].classList.remove("purple");
-          ledSectionLed[i].classList.remove("black");
+          ledSectionLed[i].classList.remove("cancel");
         }
       }
     });
